@@ -1,0 +1,46 @@
+services:
+    app:
+        build:
+            args:
+                user: ${APP_USER}
+                uid: ${APP_USER_UID}
+            context: ..
+            dockerfile: ./docker/Php/Dockerfile
+        container_name: 'app'
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./../:/var/www
+        networks:
+            - application
+        depends_on:
+            - postgres
+    postgres:
+        image: postgres
+        container_name: 'postgres'
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        volumes:
+            - ./postgres/data:/var/lib/postgresql/data
+        networks:
+            - application
+        ports:
+            - "5432:5432"
+    nginx:
+        image: nginx:latest
+        container_name: nginx
+        networks:
+            - application
+        ports:
+            - "80:80"
+        volumes:
+            - ./Nginx/config/site.conf:/etc/nginx/conf.d/site.conf
+            - ./../:/var/www
+        depends_on:
+            - postgres
+
+networks:
+    application:
+        driver: bridge
