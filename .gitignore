@@ -26,3 +26,5 @@ Thumbs.db
 yarn-error.log
 /docker/postgres/data
 /.php-cs-fixer.cache
+/resources/views/vendor/l5-swagger/.gitkeep
+/storage/api-docs/api-docs.json

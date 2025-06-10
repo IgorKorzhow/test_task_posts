@@ -1,3 +1,10 @@
+init:
+	docker-compose -f docker/docker-compose.yml run --rm app composer install \
+ 		&& docker-compose -f docker/docker-compose.yml run --rm app npm install \
+ 		&& docker-compose -f docker/docker-compose.yml run --rm app php artisan key:generate \
+ 		&& docker-compose -f docker/docker-compose.yml run --rm app php artisan migrate \
+ 		&& docker-compose -f docker/docker-compose.yml run --rm app php artisan db:seed
+
 up:
 	docker-compose -f docker/docker-compose.yml up -d
 
@@ -21,3 +28,6 @@ cs-lint:
 
 code-analyze:
 	docker-compose -f docker/docker-compose.yml exec app composer larastan-analyze
+
+swagger-generate:
+	docker-compose -f docker/docker-compose.yml exec app php artisan l5-swagger:generate
